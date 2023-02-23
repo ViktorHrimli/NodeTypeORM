@@ -10,12 +10,12 @@ export class Person extends Base {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: "simple-json", nullable: true, default: null })
+  @Column({ type: "simple-json", nullable: true })
   client_info: {
     age: number;
     color_hair: string;
   };
 
-  @Column({ type: "simple-array" })
+  @Column({ type: "simple-array", nullable: true })
   family_members: string[];
 }

@@ -1,6 +1,8 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, OneToMany, ManyToMany } from "typeorm";
 
 import { Person } from "../utils/Person";
+import { Banker } from "./Banker";
+import { Transaction } from "./Transaction";
 
 enum ClientStatus {
   STANDART = "standart",
@@ -13,7 +15,7 @@ export class Client extends Person {
   @Column({ default: true, name: "active" })
   is_active: boolean;
 
-  @Column({ unique: true, length: 10 })
+  @Column({ length: 10 })
   client_card: string;
 
   @Column({ type: "numeric" })
@@ -21,4 +23,10 @@ export class Client extends Person {
 
   @Column({ type: "enum", enum: ClientStatus, default: ClientStatus.STANDART })
   status: string;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.client)
+  transactions: Transaction[];
+
+  @ManyToMany(() => Banker, { cascade: true })
+  bankers: Banker[];
 }
