@@ -6,12 +6,12 @@ import { Client } from "../entites/Client";
 const route = exress.Router();
 
 route.get("/client", async (req, res) => {
-  // const client = await Client.find();
-  const client = await createQueryBuilder(Client, "client")
-    .select("email")
-    .from(Client, "client")
-    .where("client.id = :client_id", { id: 2 })
-    .getOne();
+  const client = await Client.find();
+  // const client = await createQueryBuilder(Client, "client")
+  //   .select("email")
+  //   .from(Client, "client")
+  //   .where("client.id = :client_id", { id: 2 })
+  //   .getOne();
 
   res.json(client);
 });
