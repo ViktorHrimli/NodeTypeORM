@@ -10,10 +10,12 @@ const bankerRoute = require("./routes/bankerRoute");
 const transactionRoute = require("./routes/transaction");
 const bankerClientRoute = require("./routes/bankerClientsRoute");
 const deleteClients = require("./routes/deleteClient");
+const authRoute = require("./routes/authRoute");
 
 app.use(cors());
 app.use(express.json());
 
+app.use("/api", authRoute);
 app.use("/api", clientRoute);
 app.use("/api", bankerRoute);
 app.use("/api", transactionRoute);

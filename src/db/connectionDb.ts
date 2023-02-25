@@ -1,7 +1,6 @@
 import { DataSource } from "typeorm";
-import { Client } from "../entites/Client";
-import { Banker } from "../entites/Banker";
-import { Transaction } from "../entites/Transaction";
+
+import { Banker, Client, Token, Transaction, User } from "../entites";
 
 module.exports = new DataSource({
   type: "postgres",
@@ -10,7 +9,7 @@ module.exports = new DataSource({
   username: "postgres",
   password: "haobanjia",
   database: "typeorm",
-  entities: [Client, Banker, Transaction],
+  entities: [Client, Banker, Transaction, Token, User],
   synchronize: true,
   logger: "simple-console",
 });
