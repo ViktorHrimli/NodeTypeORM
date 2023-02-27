@@ -3,12 +3,12 @@ import { User } from "./User";
 
 import { Base } from "../utils/BaseClass";
 
-@Entity("tokens")
+@Entity("token")
 export class Token extends Base {
   @Column()
   refreshToken: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, (user) => user.id)
   @JoinColumn()
-  user: number;
+  user: User;
 }

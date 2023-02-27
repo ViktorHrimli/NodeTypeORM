@@ -24,14 +24,14 @@ export class TokenServices {
       refreshToken,
     };
   }
-  async saveToken(userId: number, refreshToken: string) {
-    const tokenData = await Token.findOneBy({ user: userId });
-    if (tokenData) {
-      tokenData.refreshToken = refreshToken;
-      return tokenData.save();
-    }
-    const token = Token.create({ user: userId, refreshToken });
+  async saveToken(id: number, refreshToken: string) {
+    // const tokenData = await Token.findOneBy({ id: id });
+    // if (tokenData) {
+    //   tokenData.refreshToken = refreshToken;
+    //   return tokenData.save();
+    // }
+    const token = Token.create({ refreshToken }).save();
 
-    return token.save();
+    return token;
   }
 }
