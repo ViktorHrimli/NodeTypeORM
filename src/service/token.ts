@@ -25,11 +25,13 @@ export class TokenServices {
     };
   }
   async saveToken(user: any, refreshToken: string) {
-    const tokenData = await Token.findOneBy({ users_id: user.id });
-    if (tokenData) {
-      tokenData.refreshToken = refreshToken;
-      return tokenData.save();
-    }
+    // const tokenData = await Token.findOneBy({ users_id: user.id });
+
+    // if (tokenData) {
+    //   tokenData.refreshToken = refreshToken;
+    //   tokenData.users_id = user.id;
+    //   return tokenData.save();
+    // }
     const token = Token.create({ refreshToken });
 
     token.users_id = user.id;
