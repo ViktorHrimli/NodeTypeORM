@@ -1,5 +1,5 @@
 import { Entity, Column, OneToOne, JoinColumn } from "typeorm";
-import { User } from "./User";
+import { Users } from "./Users";
 
 import { Base } from "../utils/BaseClass";
 
@@ -8,7 +8,7 @@ export class Token extends Base {
   @Column()
   refreshToken: string;
 
-  @OneToOne(() => User, (user) => user.id)
-  @JoinColumn()
-  user: User;
+  @OneToOne(() => Users, (users) => users.token)
+  @JoinColumn({ name: "user_id" })
+  users_id: Users;
 }

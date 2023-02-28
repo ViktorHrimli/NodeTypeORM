@@ -1,4 +1,4 @@
-import { User, Token } from "../entites";
+import { Users, Token } from "../entites";
 import { UserDto } from "../dto/userDto";
 import { TokenServices } from "./token";
 
@@ -9,22 +9,22 @@ export class UserService {
     try {
       const tokenServices = new TokenServices();
 
-      const candidat = await User.findOneBy({ email });
+      const candidat = await Users.findOneBy({ email });
       if (candidat) {
         throw new Error("User with this email already register!");
       }
 
       const activationLink = uuid.v4();
 
-      const newUser = User.create({ email, password, activationLink });
-      newUser.save();
+      const newUser = Users.create({ email, password, activationLink });
+      await newUser.save();
 
       const payload = new UserDto(newUser);
 
       const { refreshToken } = await tokenServices.generationToken({
         ...payload,
       });
-      const token = tokenServices.saveToken(newUser.id, refreshToken);
+      const token = tokenServices.saveToken(newUser, refreshToken);
 
       return token;
     } catch (error) {
@@ -35,7 +35,7 @@ export class UserService {
   async signup() {}
   async signout() {}
   async getAll() {
-    return await User.find();
+    return await Users.find();
   }
   async isActive() {}
 }
