@@ -13,6 +13,11 @@ export class User {
 
       const user = await service.signin(email, hashPassword);
 
+      res.cookie("refreshToken", user.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+
       res.status(200).json(user);
     } catch (error) {
       throw new Error(error.message);
@@ -32,5 +37,13 @@ export class User {
       throw new Error(error.message);
     }
   }
-  async isActive(req: Request, res: Response, next: NextFunction) {}
+  async isActive(req: Request, res: Response, next: NextFunction) {
+    try {
+      await service.isActive(req.params.link);
+
+      res.status(200).json({ message: "OK" });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 }

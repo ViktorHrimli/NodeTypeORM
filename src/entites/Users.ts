@@ -23,6 +23,6 @@ export class Users extends Base {
   @Column({ nullable: true })
   activationLink: string;
 
-  @OneToOne(() => Token, (token) => token.users_id, { cascade: true })
-  token: Token;
+  // @OneToOne(() => Token, (token) => token.owner, { cascade: true })
+  // token: Token;
 }
