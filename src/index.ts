@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import { errorsHandler } from "./midllewares/errors";
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -23,6 +24,8 @@ app.use("/api", bankerRoute);
 app.use("/api", transactionRoute);
 app.use("/api", bankerClientRoute);
 app.use("/api", deleteClients);
+
+app.use(errorsHandler);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Not found", status: "Faild" });

@@ -2,6 +2,7 @@ import { Users } from "../entites";
 import { UserDto } from "../dto/userDto";
 import { TokenServices } from "./token";
 import { MailServices } from "./mail";
+import { ApiErrors } from "../utils/ApiErrors";
 
 import * as uuid from "uuid";
 
@@ -15,7 +16,7 @@ export class UserService {
 
       const candidat = await Users.findOneBy({ email });
       if (candidat) {
-        throw new Error("User with this email already register!");
+        throw ApiErrors.BadRequest("User with this email already register!");
       }
 
       const activationLink = uuid.v4();
@@ -23,9 +24,9 @@ export class UserService {
       const newUser = Users.create({ email, password, activationLink });
       await newUser.save();
 
-      mailServ.sendActivationMail(
+      await mailServ.sendActivationMail(
         email,
-        `${HTTP_URL}api/activate/:${activationLink}`
+        `${HTTP_URL}api/activate/${activationLink}`
       );
 
       const payload = new UserDto(newUser);
@@ -40,7 +41,7 @@ export class UserService {
         user: payload,
       };
     } catch (error) {
-      throw new Error(error.message);
+      throw ApiErrors.BadRequest(error.message);
     }
   }
 

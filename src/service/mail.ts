@@ -2,31 +2,31 @@ const nodemailer = require("nodemailer");
 
 const { MAIL_USER, MAIL_PORT, MAIL_HOST, MAIL_PASS } = process.env;
 
+const config = {
+  host: "smtp.meta.ua",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "viktor_hrimli101@meta.ua",
+    pass: MAIL_PASS,
+  },
+};
+
+const transporter = nodemailer.createTransport(config);
+
 export class MailServices {
-  transporter: any;
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: "smtp.meta.ua",
-      port: 465,
-      secure: true,
-      auth: {
-        user: MAIL_USER,
-        pass: MAIL_PASS,
-      },
-    });
-  }
   async sendActivationMail(email: string, link: string) {
     const emailOptions = {
-      from: MAIL_USER,
-      to: email,
+      from: "viktor_hrimli101@meta.ua",
       subject: "Activated mail!",
+      text: "",
       html: `
       <div> 
           <h1>Activated your email ${email}!</h1>
-          <p>Link <a href=${link} /> </p>
+          <p><a href=${link}>Link </a></p>
       </div>
       `,
     };
-    await this.transporter.sendMail(emailOptions);
+    await transporter.sendMail({ ...emailOptions, to: email });
   }
 }

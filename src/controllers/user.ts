@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 import bycrypt from "bcrypt";
 
 import { UserService } from "../service";
@@ -20,7 +20,7 @@ export class User {
 
       res.status(200).json(user);
     } catch (error) {
-      throw new Error(error.message);
+      next(error);
     }
   }
 
@@ -34,7 +34,7 @@ export class User {
 
       res.status(200).send(allUsers);
     } catch (error) {
-      throw new Error(error.message);
+      next(error);
     }
   }
   async isActive(req: Request, res: Response, next: NextFunction) {
@@ -43,7 +43,7 @@ export class User {
 
       res.status(200).json({ message: "OK" });
     } catch (error) {
-      throw new Error(error.message);
+      next(error);
     }
   }
 }
