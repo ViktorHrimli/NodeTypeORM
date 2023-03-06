@@ -11,7 +11,7 @@ export class ApiErrors extends Error {
     return new ApiErrors(401, "Unaotorization user!");
   }
 
-  static BadRequest(message: string, errors = []) {
+  static BadRequest(message: string, errors: any = []) {
     return new ApiErrors(400, message, errors);
   }
 }

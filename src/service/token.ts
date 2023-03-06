@@ -26,21 +26,26 @@ export class TokenServices {
     };
   }
   async saveToken(user: Users, refreshToken: string) {
-    // const tokenData = await Token.find({ relations: { owner: true } });
+    const tokenData = await Token.findOneBy({ user_id: user.id });
 
-    // console.log(tokenData);
-
-    // // if (tokenData) {
-    // //   tokenData.refreshToken = refreshToken;
-    // //   tokenData.owner = user.id;
-    // //   return tokenData.save();
-    // // }
-    const token = await Token.create({ refreshToken, owner: user }).save();
+    if (tokenData) {
+      tokenData.refreshToken = refreshToken;
+      tokenData.user_id = user.id;
+      return tokenData.save();
+    }
+    const token = await Token.create({ refreshToken, user_id: user.id }).save();
 
     return {
       refreshToken: token.refreshToken,
       user_id: token.id,
       id: token.id,
     };
+  }
+
+  async removeToken(refreshToken: string) {
+    const tokenData = await Token.findOneBy({ refreshToken });
+    tokenData?.remove({ data: refreshToken });
+    tokenData?.save();
+    return tokenData;
   }
 }

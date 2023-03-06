@@ -8,7 +8,7 @@ export class Token extends Base {
   @Column()
   refreshToken: string;
 
-  @OneToOne(() => Users)
-  @JoinColumn()
-  owner: Users;
+  // @OneToOne(() => Users, (user) => user.id )
+  @Column()
+  user_id: number;
 }
