@@ -13,7 +13,7 @@ const { SECRET_ACCESS_JWT, SECRET_REFRESH_JWT } = process.env;
 export class TokenServices {
   async generationToken(payload: IPayload) {
     const accssesToken = jwt.sign(payload, SECRET_ACCESS_JWT!, {
-      expiresIn: "30m",
+      expiresIn: "30s",
     });
 
     const refreshToken = jwt.sign(payload, SECRET_REFRESH_JWT!, {
@@ -25,6 +25,34 @@ export class TokenServices {
       refreshToken,
     };
   }
+
+  async validateRefreshToken(token: string) {
+    try {
+      const dataToken = jwt.verify(token, SECRET_REFRESH_JWT!);
+      return dataToken;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async validateAccssesToken(token: string) {
+    try {
+      const dataToken = jwt.verify(token, SECRET_ACCESS_JWT!);
+      return dataToken;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async findToken(id: number) {
+    try {
+      const token = await Token.findOneBy({ user_id: id });
+      return token;
+    } catch (error) {
+      return null;
+    }
+  }
+
   async saveToken(user: Users, refreshToken: string) {
     const tokenData = await Token.findOneBy({ user_id: user.id });
 

@@ -10,6 +10,10 @@ import * as uuid from "uuid";
 
 const { HTTP_URL } = process.env;
 
+interface IUser {
+  id: number;
+}
+
 export class UserService {
   async signin(email: string, password: string) {
     try {
@@ -33,13 +37,15 @@ export class UserService {
 
       const payload = new UserDto(newUser);
 
-      const { refreshToken } = await tokenServices.generationToken({
-        ...payload,
-      });
+      const { refreshToken, accssesToken } =
+        await tokenServices.generationToken({
+          ...payload,
+        });
       const token = await tokenServices.saveToken(newUser, refreshToken);
 
       return {
         ...token,
+        accssesToken,
         user: payload,
       };
     } catch (error) {
@@ -65,33 +71,64 @@ export class UserService {
 
       const payload = new UserDto(user);
 
-      const { refreshToken } = await tokenServices.generationToken({
-        ...payload,
-      });
+      const { refreshToken, accssesToken } =
+        await tokenServices.generationToken({
+          ...payload,
+        });
       const token = await tokenServices.saveToken(user, refreshToken);
 
       return {
         ...token,
+        accssesToken,
         user: payload,
       };
     } catch (error) {
       throw ApiErrors.BadRequest(error.message);
     }
   }
-  //
-  //
-  //
+
   async signout(refreshToken: string) {
     const tokenServices = new TokenServices();
 
     const token = await tokenServices.removeToken(refreshToken);
     return token;
   }
-  //
-  //
-  //
+
   async getAll() {
     return await Users.find();
+  }
+
+  async refreshToken(refreshToken: string) {
+    const tokenServices = new TokenServices();
+
+    if (!refreshToken) {
+      throw ApiErrors.UnautorizationError();
+    }
+
+    const validateToken: any = await tokenServices.validateRefreshToken(
+      refreshToken
+    );
+
+    const dataToken = await tokenServices.findToken(validateToken?.id);
+
+    if (!validateToken || !dataToken) {
+      throw ApiErrors.UnautorizationError();
+    }
+
+    const user = await Users.findOneBy({ id: dataToken.user_id });
+
+    const payload = new UserDto(user!);
+
+    const tokens = await tokenServices.generationToken({
+      ...payload,
+    });
+    const token = await tokenServices.saveToken(user!, tokens.refreshToken);
+
+    return {
+      ...token,
+      accssesToken: tokens.accssesToken,
+      user: payload,
+    };
   }
   async isActive(activatedLink: string) {
     try {
